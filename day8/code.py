@@ -120,13 +120,16 @@ class Entry:
         for signal in self.signal_pattern:
             if len(signal) == 2:
                 one = signal
-                self.code[frozenset(signal)] = 1
+                self.code[frozenset(one)] = 1
             elif len(signal) == 3:
-                self.code[frozenset(signal)] = 7
+                seven = signal
+                self.code[frozenset(seven)] = 7
             elif len(signal) == 4:
-                self.code[frozenset(signal)] = 4
+                four = signal
+                self.code[frozenset(four)] = 4
             elif len(signal) == 7:
-                self.code[frozenset(signal)] = 8
+                eight = signal
+                self.code[frozenset(eight)] = 8
         # pick 3 out of 2/3/5
         ttf = [s for s in self.signal_pattern if len(s) == 5]
         if overlap(ttf[0], ttf[1]) == 3:
@@ -167,6 +170,12 @@ class Entry:
 entries = list()
 for rawstring in raw:
     entries.append(Entry(rawstring))
+
+def sanity_check(entry):
+    # check that segment number of the output matches
+    out_number_string = f'{entry.get_out_value():04}'
+    output_lengths = [len(o) for o in entry.output]
+    return [eval(s) in segment_num_to_digit[l] for l, s in zip(output_lengths, out_number_string)]
 
 ans = sum([entry.get_out_value() for entry in entries])
 with open('output2.txt','w') as fobj:
